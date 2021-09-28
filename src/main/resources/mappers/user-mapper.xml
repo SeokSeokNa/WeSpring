@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nh.mapper.UserMapper">
+    <select id="selectUser" parameterType="String" resultType="UserDto">
+        <![CDATA[
+        SELECT
+               user_id as userId,
+               user_pass as userPass,
+               user_name as userName,
+               gender
+        from user
+
+        WHERE user_id=#{id}
+        ]]>
+    </select>
+
+    <select id="allUsers" resultType="UserDto">
+        SELECT * from user
+    </select>
+
+
+    <insert id="insertUser" parameterType="com.nh.dto.UserDto">
+        INSERT INTO user(
+            user_id,
+            user_pass,
+            user_name,
+            gender
+        ) values (
+                     #{userId},
+                     #{userPass},
+                     #{userName},
+                     #{gender}
+                 )
+    </insert>
+
+</mapper>

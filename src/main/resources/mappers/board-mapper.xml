@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nh.mapper.BoardMapper">
+
+
+    <insert id="insertBoard" parameterType="boardDto">
+        INSERT INTO board(
+            title,
+            content,
+            user_id
+        ) values (
+                     #{title},
+                     #{content},
+                     #{userId}
+                 )
+    </insert>
+
+    <select id="boardList" resultType="boardDto">
+        <![CDATA[ --이 방법으로 하려면 root-context.xml에서  property name='url' 부분에 value에
+ --               -- jdbc:log4jdbc:mysql://localhost:3306/mydb?allowMultiQueries=true 로 바꿔줘야함
+            SET @rownum:='0';
+            SELECT  board.title as title , board.content as content , board.write_date as writeDate
+            FROM
+                (SELECT * FROM board order by write_date desc) as board
+            limit 0,5
+        ]]>
+    </select>
+
+    <select id="boardList2" resultMap="boardListResult" parameterType="int">
+        <![CDATA[
+        select @rownum:=@rownum+1 as page_no,board.*
+        from
+            (select * from board order by write_date desc) as board,
+            (select @rownum:=0) temp
+            limit ${offset},5;
+        ]]>
+    </select>
+
+    <resultMap id="boardListResult" type="boardDto">
+        <result column="page_no" property="pageNo"/>
+        <result column="board_num" property="boardNum"/>
+        <result column="title" property="title"/>
+        <result column="content" property="content"/>
+        <result column="user_id" property="userId"/>
+        <result column="write_date" property="writeDate"/>
+        <result column="hit" property="hit"/>
+    </resultMap>
+
+
+    <select id="totalCount" resultType="int">
+        <![CDATA[
+        select count(*) cnt from board;
+        ]]>
+    </select>
+
+</mapper>
