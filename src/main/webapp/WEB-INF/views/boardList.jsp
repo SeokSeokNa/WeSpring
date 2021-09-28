@@ -58,17 +58,10 @@
                 <%--이전버튼 상태표시--%>
                 <c:choose>
                     <c:when test="${currentPage==0}">
-<<<<<<< HEAD
-                        <li class="page-item disabled"><a class="page-link">Previous</a></li><%--클래스에 disabled 클래스 추가 함으로 disabled css 적용7ㄹ--%>
-                    </c:when>
-                    <c:otherwise>
-                        <li class="page-item"><a class="page-link" href="/board/list?currentPage=${currentPage-1}">Previous</a></li>
-=======
                         <li class="page-item disabled"><a class="page-link">이전</a></li><%--클래스에 disabled 클래스 추가 함으로 disabled css 적용7ㄹ--%>
                     </c:when>
                     <c:otherwise>
                         <li class="page-item"><a class="page-link" href="/board/list?currentPage=${currentPage-1}">이전</a></li>
->>>>>>> 10146e183fb189f77a23ce721734f1afccdd344a
                     </c:otherwise>
                 </c:choose>
 
@@ -88,17 +81,10 @@
                  <%--다음버튼 상태표시--%>
                  <c:choose>
                      <c:when test="${currentPage == pageCount-1}">
-<<<<<<< HEAD
-                         <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
-                     </c:when>
-                     <c:otherwise>
-                         <li class="page-item"><a class="page-link" href="/board/list?currentPage=${currentPage+1}">Next</a></li>
-=======
                          <li class="page-item disabled"><a class="page-link" href="#">다음</a></li>
                      </c:when>
                      <c:otherwise>
                          <li class="page-item"><a class="page-link" href="/board/list?currentPage=${currentPage+1}">다음</a></li>
->>>>>>> 10146e183fb189f77a23ce721734f1afccdd344a
                      </c:otherwise>
                  </c:choose>
             </ul>

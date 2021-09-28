@@ -39,10 +39,8 @@ public class UserController {
         return "user";
     }
 
-<<<<<<< HEAD
-=======
     //전체유저 조회
->>>>>>> 10146e183fb189f77a23ce721734f1afccdd344a
+
     @RequestMapping("/users")
     public String users(Model model) {
         List<UserDto> users = userService.allUsers();
