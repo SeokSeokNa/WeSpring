@@ -19,8 +19,8 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
-    public List<BoardDto> boardList(int offset) {
-        return boardDao.boardList(offset);
+    public List<BoardDto> boardList(int offset , int pageData) {
+        return boardDao.boardList(offset,pageData);
     }
 
     @Override

@@ -33,7 +33,7 @@
         from
             (select * from board order by write_date desc) as board,
             (select @rownum:=0) temp
-            limit ${offset},5;
+            limit #{offset},#{pageData};
         ]]>
     </select>
 

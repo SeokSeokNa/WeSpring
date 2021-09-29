@@ -8,6 +8,6 @@ import java.util.List;
 public interface BoardService {
 
     public int insertBoard(BoardDto boardDto);
-    public List<BoardDto> boardList(int offset);
+    public List<BoardDto> boardList(int offset , int pageData);
     public int totalCount();
 }

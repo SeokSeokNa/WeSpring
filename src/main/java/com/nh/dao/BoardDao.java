@@ -21,9 +21,9 @@ public class BoardDao {
         return mapper.insertBoard(boardDto);
     }
 
-    public List<BoardDto> boardList(int offset){
+    public List<BoardDto> boardList(int offset , int pageData){
         BoardMapper mapper = sqlSession.getMapper(BoardMapper.class);
-        return mapper.boardList2(offset);
+        return mapper.boardList2(offset,pageData);
     }
 
 
