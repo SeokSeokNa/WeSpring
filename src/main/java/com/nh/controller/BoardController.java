@@ -33,8 +33,17 @@ public class BoardController {
         int pageData = 5;//한 페이지당 보여질 데이터 개수 (이건 내가 그냥 막 정하면됩니당)
         int offset = currentPage*pageData; //전체 데이터(totalCount)에서 몇번째부터 시작점으로 잡을지 정할때 필요(예를들어 1번 페이지는 0번데이터부터  , 2번페이지는 5번데이터부터)_
         int totalCount = boardService.totalCount();
+        int pageCount = (totalCount / pageData) + ((totalCount % pageData) > 0 ? 1 : 0);
+        //------------------------------------------------------2021-10-02 추가내용
+        //페이지 번호가 한번에 몇개부터 몇개씩 보일것인지 !
+        int pageMaxNum = 5;
+        int start = Math.max(1 , currentPage/pageMaxNum*pageMaxNum+1);//페이지 번호를 몇번부터 표시할건지
+        int end = Math.min(pageCount , start+pageMaxNum-1);//페이지 번호를 몇번까지 표시할건지
+        //------------------------------------------------------
         model.addAttribute("currentPage",currentPage); //현재 페이지(화면에서 페이지버튼 눌린표시랑 안눌린표시 , 이전버튼 , 다음버튼 활성화 비활성화 할때 필요)
-        model.addAttribute("pageCount",(totalCount/pageData) + ((totalCount%pageData) >0? 1:0)); //총 페이지수(화면에서 페이지 버튼 개수 만들때 필요 , 이전버튼 , 다음버튼 활성화 비활성화 할때 필요)
+        model.addAttribute("pageCount",pageCount); //총 페이지수(화면에서 페이지 버튼 개수 만들때 필요 , 이전버튼 , 다음버튼 활성화 비활성화 할때 필요)
+        model.addAttribute("start", start);
+        model.addAttribute("end", end);
         model.addAttribute("boardList",boardService.boardList(offset , pageData)); //게시판 리스트(몇번째 글부터 조회할지 offset을 , 한페이지에 몇개씩 조회할지 pageData를 파라미터로 넘겨야함)
         return "boardList";
     }

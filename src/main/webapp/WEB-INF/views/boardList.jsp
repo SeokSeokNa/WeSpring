@@ -66,7 +66,7 @@
                 </c:choose>
 
                 <%--페이지 버튼 개수 생성--%>
-                <c:forEach var="i" begin="1" end="${pageCount}" step="1">
+                <c:forEach var="i" begin="${start}" end="${end}" step="1">
                     <c:choose>
                         <c:when test="${currentPage == i-1}">
                             <li class="page-item active"><a class="page-link" href="/board/list?currentPage=${i-1}">${i}</a></li>
