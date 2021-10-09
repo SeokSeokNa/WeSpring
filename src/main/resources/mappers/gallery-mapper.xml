@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nh.mapper.GalleryMapper">
+
+    <insert id="galleryInsert" parameterType="galleryDto" useGeneratedKeys="true" keyProperty="galleryNo">
+        INSERT INTO gallery
+        (`user_id`,
+         `title`)
+        VALUES
+        (#{userId},
+         #{title})
+    </insert>
+
+    <insert id="photoInsert" parameterType="photoDto">
+        INSERT INTO photo
+        (
+            `gallery_no`,
+            `org_name`,
+            `new_name`,
+            `location`)
+        VALUES
+        (
+            #{galleryNo},
+            #{orgName},
+            #{newName},
+            #{location})
+    </insert>
+
+
+
+    <resultMap id="galleryList" type="galleryDto">
+        <result property="galleryNo" column="gallery_no"/>
+        <result property="title" column="title"/>
+        <result property="writeDate" column="write_date"/>
+        <result property="userId" column="user_id"/>
+        <collection property="photoDtoList" column="galleryNo=gallery_no" javaType="java.util.ArrayList" ofType="photoDto" select="getPhotoList"/>
+    </resultMap>
+    <select id="getGallery" resultMap="galleryList">
+        SELECT gallery_no , title , write_date , b.user_id as user_id FROM gallery a inner join user b on a.user_id = b.user_id
+    </select>
+    <select id="getPhotoList" resultType="photoDto">
+        SELECT photo_no as photoNo,new_name as newName FROM photo WHERE gallery_no = #{galleryNo}
+    </select>
+
+</mapper>

@@ -1,0 +1,6 @@
+@import url(https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.css);
+@import url(https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css);
+
+.row {
+    margin: 15px;
+}

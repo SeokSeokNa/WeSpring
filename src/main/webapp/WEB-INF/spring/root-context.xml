@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--db정보에 대한 걸 database.properties에 담아뒀으니 그걸 읽어다 써라-->
+    <context:property-placeholder location="/WEB-INF/spring/database.properties"/>
+
+    <!--DB설정 정보를 커넥션 풀 객체에 담는 설정-->
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <!--DB드라이버-->
+        <!--<property name="driverClassName" value="${jdbc.driverClassName}"/>-->
+        <!--DB URL주소 -->
+        <!--<property name="url" value="${jdbc.url}"/>-->
+        <property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"/>
+        <property name="url" value="jdbc:log4jdbc:mysql://localhost:3306/mydb"/>
+        <!--DB 아이디 -->
+        <property name="username" value="${jdbc.username}"/>
+        <!--DB password -->
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+
+    <!-- Mysql <-> Mybatis를 연결해주는 클래스Bean 등록-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--setter를 이용한 의존성 주입-->
+        <property name="dataSource" ref="dataSource"/>
+        <!--Mybatis 설정 파일을 변수 configLocation에 저장-->
+        <property name="configLocation" value="classpath:/mybatis-config.xml"/>
+        <!--sql문이 작성될 xml파일이 들어간 경로 저장 (src/resources/mappers 폴더 밑에 있는 모든 xml 파일)-->
+        <property name="mapperLocations" value="classpath:/mappers/*.xml"/>
+    </bean>
+
+    <!--Mybatis에서 DB에 커밋 또는 롤백하기 위해 필요한 클래스Bean 등록 , 커넥션을 가지고 있는듯-->
+    <!--생성자를 통해 객체가 생성될때 파라미터로 위에 만든 "sqlSessionFactory" 객체가 필요하다-->
+    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg ref="sqlSessionFactory"></constructor-arg>
+    </bean>
+
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!--  파일업로드 용량 (10MB)-->
+        <property name="maxUploadSize" value="10485760"/>
+        <property name="defaultEncoding" value="UTF-8" />
+    </bean>
+
+    <!--  파일업로드 디렉토리 설정 -->
+    <bean id="uploadPath" class="java.lang.String">
+        <constructor-arg value="C:\\weSpringFiles\"/>
+    </bean>
+
+
+</beans>
