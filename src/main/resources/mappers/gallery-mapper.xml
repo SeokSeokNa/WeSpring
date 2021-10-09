@@ -8,8 +8,8 @@
         (`user_id`,
          `title`)
         VALUES
-        (#{userId},
-         #{title})
+            (#{userId},
+             #{title})
     </insert>
 
     <insert id="photoInsert" parameterType="photoDto">
@@ -20,11 +20,11 @@
             `new_name`,
             `location`)
         VALUES
-        (
-            #{galleryNo},
-            #{orgName},
-            #{newName},
-            #{location})
+            (
+                #{galleryNo},
+                #{orgName},
+                #{newName},
+                #{location})
     </insert>
 
 
@@ -37,7 +37,7 @@
         <collection property="photoDtoList" column="galleryNo=gallery_no" javaType="java.util.ArrayList" ofType="photoDto" select="getPhotoList"/>
     </resultMap>
     <select id="getGallery" resultMap="galleryList">
-        SELECT gallery_no , title , write_date , b.user_id as user_id FROM gallery a inner join user b on a.user_id = b.user_id
+        SELECT gallery_no , title , write_date , b.user_id as user_id FROM gallery a inner join user b on a.user_id = b.user_id ORDER BY gallery_no DESC
     </select>
     <select id="getPhotoList" resultType="photoDto">
         SELECT photo_no as photoNo,new_name as newName FROM photo WHERE gallery_no = #{galleryNo}

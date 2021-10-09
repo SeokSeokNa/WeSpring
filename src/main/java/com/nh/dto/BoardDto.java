@@ -3,7 +3,6 @@ package com.nh.dto;
 import lombok.Getter;
 import lombok.Setter;
 
-
 @Getter @Setter
 public class BoardDto extends PageDto {
     private int num;         //게시글 번호
@@ -16,12 +15,6 @@ public class BoardDto extends PageDto {
     private String searchType;  //검색
     private int offset;
     private int limit;
-
-//    public String getDate() {
-//    SimpleDateFormat bdate = new SimpleDateFormat("yy/MM/dd HH:mm:ss");
-//        return bdate.format(board_date);
-//}
-
 
     @Override
     public String toString() {

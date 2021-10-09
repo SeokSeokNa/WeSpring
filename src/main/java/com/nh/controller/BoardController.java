@@ -25,8 +25,8 @@ public class BoardController {
     @GetMapping(value = "/board/list")
     public String boardList(
             BoardDto boardDto,
-            Model model,
-            @RequestParam(name = "currentPage" , defaultValue = "0") int currentPage) {
+            Model model
+            ,@RequestParam(name = "currentPage" , defaultValue = "0") int currentPage) {
 
         int pageData = 5;//한 페이지당 보여질 데이터 개수 (이건 내가 그냥 막 정하면됩니당)
         int offset = currentPage*pageData; //전체 데이터(totalCount)에서 몇번째부터 시작점으로 잡을지 정할때 필요(예를들어 1번 페이지는 0번데이터부터  , 2번페이지는 5번데이터부터)_
@@ -132,6 +132,5 @@ public class BoardController {
         return "redirect:/board/list";
         /* redirect사용시 model은 소멸됨 */
     }
-
 
 }

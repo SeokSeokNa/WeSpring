@@ -102,6 +102,6 @@ public class UserController {
         } else if (result == 0) {
             return_val =  "no";
         }
-       return return_val;
+        return return_val;
     }
 }

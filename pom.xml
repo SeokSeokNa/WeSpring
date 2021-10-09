@@ -135,6 +135,9 @@
             <version>1.16</version>
         </dependency>
 
+
+
+        <!-- JSP에서 사용될 것이며 Controller에서 넘어온 값들을 뿌리기 위한 문법 라이브러리임 -->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>jstl</artifactId>

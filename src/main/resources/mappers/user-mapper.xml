@@ -15,12 +15,12 @@
         from user
 
         WHERE user_id=#{userId}  /*map의 키값과 일치*/
-        AND   user_pass=#{userPass}
+          AND   user_pass=#{userPass}
 
     </select>
     <select id="allUsers" resultType="UserDto">
         SELECT * from user
-        </select>
+    </select>
 
     <insert id="insertUser" parameterType="com.nh.dto.UserDto">
         INSERT INTO user(
