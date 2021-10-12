@@ -1,6 +1,8 @@
 package com.nh.mapper;
 
 import com.nh.dto.BoardDto;
+import org.apache.ibatis.annotations.Param;
+
 
 import java.util.List;
 

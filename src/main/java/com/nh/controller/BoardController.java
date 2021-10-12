@@ -38,7 +38,7 @@ public class BoardController {
         int pageMaxNum = 5; // 한번에 페이지 버튼이 몇개씩 보일것인가에 대한 값이다.
         int start = Math.max(1 , currentPage/pageMaxNum*pageMaxNum+1);//페이지 번호를 몇번부터 표시할건지
         int end = Math.min(pageCount , start+pageMaxNum-1);//페이지 번호를 몇번까지 표시할건지
-        //------------------------------------------------------
+        //------------------------------------------------------//
 
         boardDto.setOffset(offset);
         boardDto.setLimit(pageData);

@@ -12,6 +12,7 @@
     <title>Title</title>
     <link rel="stylesheet" type="text/css" href="/resources/css/board_post.css">
 </head>
+<jsp:include page="/WEB-INF/views/header.jsp"/>
 <body>
 
 <h1>글쓰기</h1>
@@ -20,7 +21,7 @@
      <%--   <input type="hidden" id="id" placeholder="작성자" name = "id" />--%>
         <c:choose>
             <c:when test="${sessionScope.user_info != null}">
-                <input id="id" name="id" type="text" value="${sessionScope.user_info.userId}" readonly/>
+                <input id="id" name="id" type="text" value="${sessionScope.user_info.userId}" readonly style="display: none"/>
             </c:when>
             <c:otherwise>
             </c:otherwise>

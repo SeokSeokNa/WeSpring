@@ -8,8 +8,8 @@
         (`user_id`,
          `title`)
         VALUES
-            (#{userId},
-             #{title})
+        (#{userId},
+         #{title})
     </insert>
 
     <insert id="photoInsert" parameterType="photoDto">
@@ -20,11 +20,11 @@
             `new_name`,
             `location`)
         VALUES
-            (
-                #{galleryNo},
-                #{orgName},
-                #{newName},
-                #{location})
+        (
+            #{galleryNo},
+            #{orgName},
+            #{newName},
+            #{location})
     </insert>
 
 
@@ -36,11 +36,40 @@
         <result property="userId" column="user_id"/>
         <collection property="photoDtoList" column="galleryNo=gallery_no" javaType="java.util.ArrayList" ofType="photoDto" select="getPhotoList"/>
     </resultMap>
-    <select id="getGallery" resultMap="galleryList">
-        SELECT gallery_no , title , write_date , b.user_id as user_id FROM gallery a inner join user b on a.user_id = b.user_id ORDER BY gallery_no DESC
+    <select id="getGallery" resultMap="galleryList" parameterType="Integer">
+        SELECT
+            @rownum:=@rownum+1 as page_no,gallery.*
+            from (
+                select * from gallery order by gallery_no desc) as gallery,
+                (select @rownum:=0) temp
+                limit #{offset}, #{limit};
     </select>
     <select id="getPhotoList" resultType="photoDto">
         SELECT photo_no as photoNo,new_name as newName FROM photo WHERE gallery_no = #{galleryNo}
+    </select>
+
+    <delete id="galleryDelete" parameterType="java.lang.Integer" >
+    <![CDATA[
+        delete
+        from
+            gallery
+        where
+            gallery_no = #{galleryNo}
+        ]]>
+    </delete>
+
+    <delete id="galleryPhotoDelete" parameterType="java.lang.Integer" >
+    <![CDATA[
+        delete
+        from
+            photo
+        where
+            gallery_no = #{galleryNo}
+        ]]>
+    </delete>
+
+    <select id="totalGalleryCount" resultType="Integer">
+        select count(*) cnt from gallery;
     </select>
 
 </mapper>

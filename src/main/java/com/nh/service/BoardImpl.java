@@ -30,13 +30,6 @@ public class BoardImpl implements BoardService {
         return boardDtoList;
     }
 
-//    //페이징
-//    @Override
-//    public int getListCnt(BoardDto boardDto){
-//      return boardDao.getListCnt(boardDto);
-//    }
-
-
     @Override
     public BoardDto getBoardContents(int num) {
         return boardDao.getBoardContents(num);
@@ -56,10 +49,10 @@ public class BoardImpl implements BoardService {
         return null;
     }
 
-
     @Override
-    public int totalBoardCount(BoardDto boardDto) {
+    public int totalBoardCount(BoardDto boardDto){
         return boardDao.totalBoardCount(boardDto);
     }
+
 }
 

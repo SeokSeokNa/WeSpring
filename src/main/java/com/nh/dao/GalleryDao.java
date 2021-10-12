@@ -32,8 +32,28 @@ public class GalleryDao {
         return return_val;
     }
 
-    public List<GalleryDto> galleryList() {
+    public List<GalleryDto> galleryList(int offset, int limit) {
         GalleryMapper mapper = sqlSession.getMapper(GalleryMapper.class);
-        return mapper.getGallery();
+        return mapper.getGallery(offset, limit);
+    }
+
+    public int galleryDelete(int galleryNo) {
+        GalleryMapper mapper = sqlSession.getMapper(GalleryMapper.class);
+        int result = galleryPhotoDelete(galleryNo);
+        if ((result > 0)) {
+            return mapper.galleryDelete(galleryNo);
+        } else {
+            return 0;
+        }
+    }
+
+    public int galleryPhotoDelete(int galleryNo) {
+        GalleryMapper mapper = sqlSession.getMapper(GalleryMapper.class);
+        return mapper.galleryPhotoDelete(galleryNo);
+    }
+
+    public int totalGalleryCount(){
+        GalleryMapper mapper = sqlSession.getMapper(GalleryMapper.class);
+        return mapper.totalGalleryCount();
     }
 }

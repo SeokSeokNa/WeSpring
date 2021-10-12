@@ -27,7 +27,7 @@
         limit #{offset},#{limit};
     </select>
 
-    <insert id="insertBoard" parameterType="BoardDto">
+        <insert id="insertBoard" parameterType="BoardDto">
         INSERT INTO board(
             id,
             title,
@@ -48,25 +48,25 @@
         where
             num =#{num}
     </select>
-    <update id="updateBoard" parameterType="BoardDto" >
-        UPDATE board SET
+<update id="updateBoard" parameterType="BoardDto" >
+                        UPDATE board SET
                          title=#{title},
                          content=#{content},
                          id=#{id},
                          board_update=now()
 
-        WHERE num=#{num}
+    WHERE num=#{num}
 
-    </update>
+</update>
 
     <delete id="getBoardDelete" parameterType="java.lang.Integer" >
     <![CDATA[
-        delete
+    delete
         from
-            board
-        where
-            num=#{num}
-        ]]>
+    board
+    where
+        num=#{num}
+    ]]>
     </delete>
 
     <select id="totalBoardCount"  resultType="integer" parameterType="BoardDto">

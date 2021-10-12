@@ -15,7 +15,7 @@
   <link rel="stylesheet"
         href="/resources/css/bootStrap/bootStrap_css/bootstrap.min.css" >
 </head>
-
+<jsp:include page="/WEB-INF/views/header.jsp"/>
 <body>
 
 
@@ -67,7 +67,7 @@
           </div>
           <div style="margin-left:1px;">
             <button type="submit" class="btn btn-primary">수정</button>
-            <a class="btn btn-danger pull-right" href="/board/read?id=${boardContents.id}">취소</a>
+            <a class="btn btn-danger pull-right" href="/board/read?num=${boardContents.num}">취소</a>
           </div>
           </div>
         </form>

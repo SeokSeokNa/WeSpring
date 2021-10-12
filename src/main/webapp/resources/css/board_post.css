@@ -10,13 +10,13 @@
 html, body {
     background: #f1f1f1;
     font-family: 'Merriweather', sans-serif;
-    padding: 1em;
 }
 
 h1 {
     text-align: center;
     color: #a8a8a8;
     text-shadow: 1px 1px 0 white;
+    padding: 1%;
 }
 
 form {
@@ -41,13 +41,13 @@ form input, form textarea {
     resize: none;
 }
 form input:focus, form textarea:focus {
-    -moz-box-shadow: 0 0px 2px #e74c3c !important;
-    -webkit-box-shadow: 0 0px 2px #e74c3c !important;
-    box-shadow: 0 0px 2px #e74c3c !important;
+    -moz-box-shadow: 0 0px 2px #c29ee3 !important;
+    -webkit-box-shadow: 0 0px 2px #c29ee3 !important;
+    box-shadow: 0 0px 2px #c29ee3 !important;
 }
 form #input-submit {
     color: white;
-    background: #e74c3c;
+    background: #c29ee3;
     cursor: pointer;
 }
 form #input-submit:hover {
@@ -56,17 +56,17 @@ form #input-submit:hover {
     box-shadow: 0 1px 1px 1px rgba(170, 170, 170, 0.6);
 }
 form textarea {
-    height: 126px;
+    height: 30%;
 }
 
 .half {
     float: left;
-    width: 48%;
+    width: 100%;
     margin-bottom: 1em;
 }
 
 .right {
-    width: 50%;
+    width: 100%;
 }
 
 .left {

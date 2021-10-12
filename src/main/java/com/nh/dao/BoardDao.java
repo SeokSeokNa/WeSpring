@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+
 @Repository
 public class BoardDao {
 
@@ -31,6 +32,7 @@ public class BoardDao {
         return boardDtoList;
     }
 
+
     public BoardDto getBoardContents(int num) {
         BoardMapper mapper = sqlSession.getMapper(BoardMapper.class);
         return mapper.getBoardContents(num);
@@ -45,8 +47,9 @@ public class BoardDao {
         mapper.getBoardDelete(num);
     }
 
-    public int totalBoardCount(BoardDto boardDto) {
+    public int totalBoardCount(BoardDto boardDto){
         BoardMapper mapper = sqlSession.getMapper(BoardMapper.class);
-        return mapper.totalBoardCount(boardDto);
+      return mapper.totalBoardCount(boardDto);
     }
+
 }

@@ -19,13 +19,93 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <link rel="stylesheet" href="/resources/css/board.css" >
 </head>
+<jsp:include page="/WEB-INF/views/header.jsp"/>
+
 <body style="text-align: center;">
 
-
 <section>
-<div id="main">
-    <h1>게시판</h1>
-</div>
+    <div id="main">
+        <h1>게시판</h1>
+    </div>
+
+    <div class="container">
+        <!-- Table -->
+        <table class="table table-striped" id="boardtable" cellspacing="0">
+            <thead>
+            <tr>
+                <th>번호</th>
+                <th>제목</th>
+                <th>작성자</th>
+                <th>날짜</th>
+            </tr>
+            </thead>
+            <c:forEach var="board" items="${boardList}">
+                <tr>
+                    <td><c:out value="${board.num}" /></td>
+                    <td>
+                        <a href="/board/read?num=${board.num}">
+                            <c:out value="${board.title}" />
+                        </a>
+                    </td>
+                    <td><c:out value="${board.id}" /></td>
+                    <td><c:out value="${board.board_date}" /></td>
+                </tr>
+            </c:forEach>
+        </table>
+        <hr/>
+<%--        <a id="btn" class="btn btn-danger pull-right" href="/board/post" onclick="location.href='/board/post'">글쓰기</a>--%>
+        <button id="write_btn" type="button" onclick="location.href='/board/post'">글쓰기</button>
+        <%--페이징--%>
+        <c:choose>
+            <c:when test="${boardList.size() > 0}">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                            <%--이전버튼 상태표시--%>
+                        <c:choose>
+                            <c:when test="${currentPage==0}">
+                                <li class="page-item disabled"><a class="page-link">이전</a></li>
+                            </c:when>
+                            <c:otherwise>
+                                <li class="page-item"><a class="page-link" href="/board/list?currentPage=${currentPage-1}">이전</a></li>
+                            </c:otherwise>
+                        </c:choose>
+
+                            <%--페이지 번호 표시--%>
+                        <c:forEach var="i" begin="${start}" end="${end}" step="1">
+                            <c:choose>
+                                <c:when test="${currentPage+1==i}">
+                                    <li class="page-item active"><a class="page-link" href="/board/list?currentPage=${i-1}&searchType=${param.searchType}&keyword=${param.keyword}">${i}</a></li>
+                                </c:when>
+                                <c:otherwise>
+                                    <li class="page-item"><a class="page-link" href="/board/list?currentPage=${i-1}&searchType=${param.searchType}&keyword=${param.keyword}">${i}</a></li>
+                                </c:otherwise>
+                            </c:choose>
+
+                        </c:forEach>
+
+
+                            <%--다음버튼 상태표시--%>
+                        <c:choose>
+                            <c:when test="${currentPage == pageCount-1}">
+                                <li class="page-item disabled"><a class="page-link" href="#">다음</a></li>
+                            </c:when>
+                            <c:otherwise>
+                                <li class="page-item"><a class="page-link" href="/board/list?currentPage=${currentPage+1}">다음</a></li>
+                            </c:otherwise>
+                        </c:choose>
+                    </ul>
+                </nav>
+            </c:when>
+            <c:otherwise>
+                <p>게시글이 존재하지 않습니다!</p>
+            </c:otherwise>
+
+        </c:choose>
+
+
+    </div>
+</section>
+
 <div class="search">
     <div class="searchBar">
         <select id="searchType" name="searchType">
@@ -38,84 +118,6 @@
         <button  id="btnSearch" name="btnSearch">검색</button>
     </div>
 </div>
-<div class="container">
-    <!-- Table -->
-    <table class="table table-striped" id="boardtable" cellspacing="0">
-        <thead>
-        <tr>
-            <th>번호</th>
-            <th>제목</th>
-            <th>내용</th>
-            <th>작성자</th>
-            <th>날짜</th>
-        </tr>
-        </thead>
-        <c:forEach var="board" items="${boardList}">
-            <tr>
-                <td><c:out value="${board.num}" /></td>
-                <td>
-                    <a href="/board/read?num=${board.num}">
-                        <c:out value="${board.title}" />
-                    </a>
-                </td>
-                <td><c:out value="${board.content}" /></td>
-                <td><c:out value="${board.id}" /></td>
-                <td><c:out value="${board.board_date}" /></td>
-            </tr>
-        </c:forEach>
-    </table>
-    <hr/>
-    <a id="btn" class="btn btn-danger pull-right" href="/board/post">글쓰기</a>
-
-    <c:choose>
-        <c:when test="${boardList.size() > 0}">
-            <nav aria-label="Page navigation example">
-                <ul class="pagination">
-                        <%--이전버튼 상태표시--%>
-                    <c:choose>
-                        <c:when test="${currentPage==0}">
-                            <li class="page-item disabled"><a class="page-link">이전</a></li>
-                        </c:when>
-                        <c:otherwise>
-                            <li class="page-item"><a class="page-link" href="/board/list?currentPage=${currentPage-1}">이전</a></li>
-                        </c:otherwise>
-                    </c:choose>
-
-                        <%--페이지 번호 표시--%>
-                    <c:forEach var="i" begin="${start}" end="${end}" step="1">
-                        <c:choose>
-                            <c:when test="${currentPage+1==i}">
-                                <li class="page-item active"><a class="page-link" href="/board/list?currentPage=${i-1}&searchType=${param.searchType}&keyword=${param.keyword}">${i}</a></li>
-                            </c:when>
-                            <c:otherwise>
-                                <li class="page-item"><a class="page-link" href="/board/list?currentPage=${i-1}&searchType=${param.searchType}&keyword=${param.keyword}">${i}</a></li>
-                            </c:otherwise>
-                        </c:choose>
-
-                    </c:forEach>
-
-
-                        <%--다음버튼 상태표시--%>
-                    <c:choose>
-                        <c:when test="${currentPage == pageCount-1}">
-                            <li class="page-item disabled"><a class="page-link" href="#">다음</a></li>
-                        </c:when>
-                        <c:otherwise>
-                            <li class="page-item"><a class="page-link" href="/board/list?currentPage=${currentPage+1}">다음</a></li>
-                        </c:otherwise>
-                    </c:choose>
-                </ul>
-            </nav>
-        </c:when>
-        <c:otherwise>
-            <p>게시글이 존재하지 않습니다!</p>
-        </c:otherwise>
-
-    </c:choose>
-
-
-</div>
-    </section>
 
 
 
@@ -134,21 +136,21 @@
     });
 
 
-function fn_go_page(pageNo){
-    $("#pageIndex").val(pageNo);
-    $("#listForm").submit();
-    return false;
-}
+    function fn_go_page(pageNo){
+        $("#pageIndex").val(pageNo);
+        $("#listForm").submit();
+        return false;
+    }
 
     $(document).ready(function() {
         $(document).on('click', '#btn', function (e){
             e.preventDefault(); // 폼 태그의 전송을 막음
-        if (${sessionScope.user_info ==null}) {
-        alert("로그인 후 이용해주세요")
-            location.href="/";
-    } else {
-        location.href="/board/post";
-    }
+            if (${sessionScope.user_info ==null}) {
+                alert("로그인 후 이용해주세요")
+                location.href="/";
+            } else {
+                location.href="/board/post";
+            }
         });
     });
 

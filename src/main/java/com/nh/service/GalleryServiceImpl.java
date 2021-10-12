@@ -1,6 +1,7 @@
 package com.nh.service;
 
 import com.nh.dao.GalleryDao;
+import com.nh.dto.BoardDto;
 import com.nh.dto.GalleryDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,16 @@ public class GalleryServiceImpl implements GalleryService{
     }
 
     @Override
-    public List<GalleryDto> galleryList() {
-        return galleryDao.galleryList();
+    public List<GalleryDto> galleryList(int offset, int limit) {
+        return galleryDao.galleryList(offset, limit);
+    }
+    @Override
+    public int galleryDelete(int galleryNo){
+        return galleryDao.galleryDelete(galleryNo);
+    }
+
+    @Override
+    public int totalGalleryCount(){
+        return galleryDao.totalGalleryCount();
     }
 }
