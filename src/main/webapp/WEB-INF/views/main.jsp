@@ -31,6 +31,7 @@
   <li><a href="/board/list" data-content="Board">Board</a></li>
   <li><a href="/gallery/list" data-content="Gallery">Gallery</a></li>
   <li><a href="https://oneseok.tistory.com/" data-content="Blog">Blog</a></li>
+  <li><a href="/oauth" data-content="Oauth">Oauth</a></li>
 </ul>
 
 

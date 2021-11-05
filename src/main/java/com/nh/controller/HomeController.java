@@ -18,5 +18,10 @@ public class HomeController {
     public String home2() {
         return "dynamic_tag";
     }
+
+    @RequestMapping("/oauth")
+    public String oauth() {
+        return "oauth";
+    }
 }
 
