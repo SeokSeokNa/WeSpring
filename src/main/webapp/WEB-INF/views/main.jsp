@@ -34,6 +34,8 @@
   <li><a href="/oauth" data-content="Oauth">Oauth</a></li>
 </ul>
 
-
+<script type="text/javascript">
+  console.log(${header});
+</script>
 </body>
 </html>

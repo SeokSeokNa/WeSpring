@@ -2,8 +2,14 @@ package com.nh.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nh.dto.TokenResponseDto;
+import com.nh.dto.UserDto;
 import com.nh.dto.kakao.KakaoTokenDto;
 import com.nh.dto.kakao.KakaoUserDto;
+import com.nh.jwt.JwtToken;
+import com.nh.service.UserService;
+import org.apache.http.HttpResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Controller;
@@ -14,27 +20,36 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.net.URI;
+import java.util.HashMap;
 
 @Controller
 public class SocialController {
 
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private JwtToken jwtToken;
+
     private static final String kakoAuthUrl = "https://kauth.kakao.com";
-    private static final String kakaoApiKey = "333f28a81c82bbd17009776e9dc42d8b";
+    private static final String kakaoApiKey = "7429442a828660d100f86f3f8608d5a1";
     private static final String redirectURI = "http://localhost:8080/oauth/result";
+    private static final String scope = "profile_nickname , profile_image ,account_email";
 
     //로그인 페이지 열기
     @GetMapping(value = "/login/getKakaoAuthUrl")
     @ResponseBody
     public String kakaoLoginPage() {
-        String reqUrl = kakoAuthUrl + "/oauth/authorize?client_id=" + kakaoApiKey + "&redirect_uri=" + redirectURI + "&response_type=code" +"&scope=profile,account_email,gender";
+        String reqUrl = kakoAuthUrl + "/oauth/authorize?client_id=" + kakaoApiKey + "&redirect_uri=" + redirectURI + "&response_type=code" +"&scope="+scope;
 
         return reqUrl;
     }
 
     //로그인 하기(인가코드 받아 토큰 추출)
     @GetMapping("/oauth/result") //Redirect Uri에 해당하는 Url
-    public String loginKakao(@RequestParam("code") String code, @RequestParam(required = false, name = "error") String error) {
+    public String loginKakao(@RequestParam("code") String code, @RequestParam(required = false, name = "error") String error , HttpSession session , HttpServletResponse response) {
         System.out.println("code = " + code);
         if (error != null) {
             System.out.println(error);
@@ -48,8 +63,32 @@ public class SocialController {
 
 
         //토큰으로 정보 조회후 현재 내 회원테이블에 있으면 넘어가고 없으면 회원가입 시킨 후 로그인 바로 시켜야 할듯
+        HashMap<String, String> map = new HashMap<String, String>();
+
+        map.put("userId", userInfo.getKakao_account().getEmail()); //카카오로부터 넘어온 이메일
+        map.put("userPass", "");
+        UserDto findUser = userService.selectUser(map);
+        if (findUser == null) {
+            //카카오로부터 받아온 이메일로 조회된 회원이 없으면 회원가입
+            UserDto userDto = new UserDto();
+            userDto.setUserId(userInfo.getKakao_account().getEmail());
+            userDto.setUserPass("sadjklfdzkljbnzckxbnkadfljkvsdjf;LJK");
+            userDto.setUserName(userInfo.getKakao_account().getProfile().getNickname());
+            int result = userService.insertUser(userDto);
+            if(result == 1 )
+                setToken(session, response, userDto);
+        } else {
+            setToken(session, response, findUser);
+        }
 
         return "redirect:/";
+    }
+
+    private void setToken(HttpSession session, HttpServletResponse  response, UserDto userDto) {
+        session.setAttribute("user_info" , userDto);
+        String accessToken = jwtToken.makeJwtToken(userDto.getUserId(), 0);
+        String refreshToken = jwtToken.makeJwtToken(userDto.getUserId(), 1);
+        response.addHeader("access_token" , accessToken);
     }
 
     //토큰얻기
