@@ -12,8 +12,9 @@
 <html>
 <head>
     <title>Title</title>
-  <link rel="stylesheet"
-        href="/resources/css/bootStrap/bootStrap_css/bootstrap.min.css" >
+  <link rel="stylesheet" href="/resources/css/bootStrap/bootStrap_css/bootstrap.min.css">
+  <script type ="text/javascript" src="/resources/js/auth.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 </head>
 <jsp:include page="/WEB-INF/views/header.jsp"/>
 <body>
@@ -81,6 +82,8 @@
 <script type="text/javascript">
   function _onSubmit(){
     if (!confirm("수정하시겠습니까?")){
+      let form = $("form");
+      goPost(form.action.url, form);
       return false;
     }
   }

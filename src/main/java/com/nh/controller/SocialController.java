@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.net.URI;
@@ -72,8 +73,9 @@ public class SocialController {
             //카카오로부터 받아온 이메일로 조회된 회원이 없으면 회원가입
             UserDto userDto = new UserDto();
             userDto.setUserId(userInfo.getKakao_account().getEmail());
-            userDto.setUserPass("sadjklfdzkljbnzckxbnkadfljkvsdjf;LJK");
+            userDto.setUserPass("1111");
             userDto.setUserName(userInfo.getKakao_account().getProfile().getNickname());
+            userDto.setGender("남자");
             int result = userService.insertUser(userDto);
             if(result == 1 )
                 setToken(session, response, userDto);
@@ -85,10 +87,20 @@ public class SocialController {
     }
 
     private void setToken(HttpSession session, HttpServletResponse  response, UserDto userDto) {
-        session.setAttribute("user_info" , userDto);
         String accessToken = jwtToken.makeJwtToken(userDto.getUserId(), 0);
         String refreshToken = jwtToken.makeJwtToken(userDto.getUserId(), 1);
-        response.addHeader("access_token" , accessToken);
+        setCookie(response, userDto.getUserName(),"user_name", 10*6*10 , false);//유저이름
+        setCookie(response, userDto.getUserId(),"user_id", 10*6*10 , false);//유저아이디
+        setCookie(response, accessToken ,"access_token" , 10*6*10 , true); //10분
+        setCookie(response, refreshToken,"refresh_token", 10*6*60*24 , true);//24시간
+    }
+
+    private void setCookie(HttpServletResponse response, String value, String cookieName , int time , Boolean httpOnly) {
+        Cookie cookie = new Cookie(cookieName, value);
+        cookie.setPath("/");
+        cookie.setMaxAge(time);
+        cookie.setHttpOnly(httpOnly);
+        response.addCookie(cookie);
     }
 
     //토큰얻기

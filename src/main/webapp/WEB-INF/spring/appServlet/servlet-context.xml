@@ -2,24 +2,36 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:beans="http://www.springframework.org/schema/c"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
 
-    <mvc:annotation-driven />
+    <mvc:annotation-driven/>
     <!--웹에서 /resources/css/**.css 나 /resources/images/default.jpg로 접근 가능함 -->
     <mvc:resources mapping="/resources/**" location="/resources/"/> <!--정적 자원넣기 (css 파일이나 , 디폴트 이미지 등)-->
     <mvc:resources mapping="/images/**" location="file:///C:/weSpringFiles/"/>
 
 
-    <context:component-scan base-package="com.nh" /> <!--컴포넌트 스캔을 통해 com.nh밑에 있는 모든클래스에 대해 bean객체를 생성해주겟다-->
-
+    <context:component-scan base-package="com.nh"/> <!--컴포넌트 스캔을 통해 com.nh밑에 있는 모든클래스에 대해 bean객체를 생성해주겟다-->
 
 
     <!--예를들어 Controller에 return에 "login"이라고 해두면 /WEB-INF/views/return.jsp 로 만들어주겠다.-->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-        <property name="prefix" value="/WEB-INF/views/" />
-        <property name="suffix" value=".jsp" />
+        <property name="prefix" value="/WEB-INF/views/"/>
+        <property name="suffix" value=".jsp"/>
     </bean>
 
+    <bean id="JwtInterceptor" class="com.nh.interceptor.JwtInterceptor"/>
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/board/**"/>
+            <mvc:exclude-mapping path="/board/list"/>
+            <mvc:exclude-mapping path="/board/read"/>
+            <ref bean="jwtInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
     <aop:aspectj-autoproxy/> <!--AspectJ라이브러리를 통해 Proxy객체를 생성하는 용도로 쓰임-->
+
+
+
 </beans>

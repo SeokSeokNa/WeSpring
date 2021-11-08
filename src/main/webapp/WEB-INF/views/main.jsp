@@ -24,7 +24,8 @@
 
 <ul>  <%-- 목록을 나타내는 html (li, a랑 셋뚜셋뚜라고 보면됨--%>
   <c:choose>
-    <c:when test="${sessionScope.user_info == null}"><li><a href="/signup/new" data-content="Sing up">Sing up</a></li></c:when>
+    <c:when test="${cookie.get('user_name') == null}"><li><a href="/signup/new" data-content="Sing up">Sing up</a></li></c:when>
+   <%-- <c:when test="${sessionScope.user_info == null}"><li><a href="/signup/new" data-content="Sing up">Sing up</a></li></c:when>--%>
     <c:otherwise><li><a href="/logout" data-content="LogOut">LogOut</a></li></c:otherwise>
   </c:choose>
 
@@ -35,7 +36,7 @@
 </ul>
 
 <script type="text/javascript">
-  console.log(${header});
+  console.log(document.cookie);
 </script>
 </body>
 </html>

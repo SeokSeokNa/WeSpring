@@ -4,10 +4,12 @@ import com.nh.aop.LogExecutionTime;
 import com.nh.dto.BoardDto;
 import com.nh.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
@@ -64,7 +66,8 @@ public class BoardController {
 
 
     @PostMapping("/board/post")
-    public String postWrite(BoardDto boardDto) {
+    public String postWrite(BoardDto boardDto , HttpServletRequest request) {
+        boardDto.setId(request.getAttribute("userId").toString());
         System.out.println("작성자 = " + boardDto.getId());
         System.out.println("제목 = " + boardDto.getTitle());
         System.out.println("내용 = " + boardDto.getContent());
