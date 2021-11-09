@@ -6,7 +6,7 @@
 
     <select id="boardList" resultType="boardDto">
         select
-        @rownum:=@rownum+1 as page_no,board.*
+        @rownum:=@rownum+1 as page_no,board.* , u.profile_img as profileImg
         from
         (
         select * from board
@@ -22,7 +22,7 @@
             </if>
         </trim>
         order by board_date desc
-        ) as board,
+        ) as board inner join user u on board.id = u.user_id,
         (select @rownum:=0) temp
         limit #{offset},#{limit};
     </select>

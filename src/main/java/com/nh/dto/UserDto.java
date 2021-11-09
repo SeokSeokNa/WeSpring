@@ -19,6 +19,7 @@ public class UserDto {
     private String userPass;
     private String userName;
     private String gender;
+    private String profileImg;
 
 
 }

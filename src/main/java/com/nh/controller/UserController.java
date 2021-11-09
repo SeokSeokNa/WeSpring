@@ -1,24 +1,27 @@
 package com.nh.controller;
 
-import com.nh.aop.LogExecutionTime;
-import com.nh.dto.BoardDto;
 import com.nh.dto.UserDto;
+import com.nh.jwt.JwtToken;
 import com.nh.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 
 @Controller
+@RequiredArgsConstructor
 public class UserController {
 
-    @Autowired
+
     private UserService userService;
+    private JwtToken jwtToken;
 
     @GetMapping("/signup/new")
     public String getSignup() {
@@ -98,10 +101,29 @@ public class UserController {
         int result = userService.idCheck(userId);
 
         if (result == 1) {
-            return_val =  "ok";
+            return_val = "ok";
         } else if (result == 0) {
-            return_val =  "no";
+            return_val = "no";
         }
         return return_val;
+    }
+
+
+    @PostMapping("/user/getToken")
+    @ResponseBody
+    public String getToken(HttpServletResponse response , HttpServletRequest request) {
+        String userId = request.getAttribute("userId").toString();
+        String accessToken = jwtToken.makeJwtToken(userId, 0);
+        setCookie(response,accessToken,"access_token",10*6*10 ,true);
+        setCookie(response, userId,"user_id", 10*6*10 , false);//유저아이디
+        return "ok";
+    }
+
+    private void setCookie(HttpServletResponse response, String value, String cookieName , int time , Boolean httpOnly) {
+        Cookie cookie = new Cookie(cookieName, value);
+        cookie.setPath("/");
+        cookie.setMaxAge(time);
+        cookie.setHttpOnly(httpOnly);
+        response.addCookie(cookie);
     }
 }

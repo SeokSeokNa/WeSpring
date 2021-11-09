@@ -33,6 +33,7 @@
         <table class="table table-striped" id="boardtable" cellspacing="0">
             <thead>
             <tr>
+                <th></th>
                 <th>번호</th>
                 <th>제목</th>
                 <th>작성자</th>
@@ -41,6 +42,17 @@
             </thead>
             <c:forEach var="board" items="${boardList}">
                 <tr>
+                    <td>
+                        <c:choose>
+                            <c:when test="${board.profileImg ==null}">
+                                <img src="/resources/image/default-user.png" width="100"/>
+                            </c:when>
+                            <c:otherwise>
+                                <img src="${board.profileImg}" width="100"/>
+                            </c:otherwise>
+                        </c:choose>
+
+                    </td>
                     <td><c:out value="${board.num}"/></td>
                     <td>
                         <a href="/board/read?num=${board.num}">

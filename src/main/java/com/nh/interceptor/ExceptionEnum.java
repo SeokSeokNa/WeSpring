@@ -7,8 +7,9 @@ import org.springframework.http.HttpStatus;
 public enum ExceptionEnum {
 
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED,"E0001", "권한이 없습니다."),
-    EXPIREDTOKEN(HttpStatus.BAD_REQUEST,"E0002", "만료된 토큰입니다."),
-    COUNTERFEIT(HttpStatus.INTERNAL_SERVER_ERROR, "E0003", "위조시도");
+    ACCESSEXPIRED(HttpStatus.BAD_REQUEST,"E0002", "만료된 토큰입니다."),
+    REFRESHEXPIRED(HttpStatus.BAD_REQUEST,"E0003", "만료된 토큰입니다."),
+    COUNTERFEIT(HttpStatus.INTERNAL_SERVER_ERROR, "E0004", "위조시도");
 
     private HttpStatus httpStatus;
     private String  code;
@@ -25,7 +26,7 @@ public enum ExceptionEnum {
         if (code.equals("E0001")) {
             returnEnum = UNAUTHORIZED;
         } else if (code.equals("E0002")) {
-            returnEnum = EXPIREDTOKEN;
+            returnEnum = ACCESSEXPIRED;
         } else{
             returnEnum = COUNTERFEIT;
         }

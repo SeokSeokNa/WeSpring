@@ -2,15 +2,16 @@ package com.nh.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nh.dto.TokenResponseDto;
 import com.nh.dto.UserDto;
 import com.nh.dto.kakao.KakaoTokenDto;
 import com.nh.dto.kakao.KakaoUserDto;
 import com.nh.jwt.JwtToken;
 import com.nh.service.UserService;
-import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.LinkedMultiValueMap;
@@ -22,7 +23,6 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.net.URI;
 import java.util.HashMap;
 
@@ -50,7 +50,7 @@ public class SocialController {
 
     //로그인 하기(인가코드 받아 토큰 추출)
     @GetMapping("/oauth/result") //Redirect Uri에 해당하는 Url
-    public String loginKakao(@RequestParam("code") String code, @RequestParam(required = false, name = "error") String error , HttpSession session , HttpServletResponse response) {
+    public String loginKakao(@RequestParam("code") String code, @RequestParam(required = false, name = "error") String error , HttpServletResponse response) {
         System.out.println("code = " + code);
         if (error != null) {
             System.out.println(error);
@@ -67,26 +67,39 @@ public class SocialController {
         HashMap<String, String> map = new HashMap<String, String>();
 
         map.put("userId", userInfo.getKakao_account().getEmail()); //카카오로부터 넘어온 이메일
+        //암호화로직처리
+        //암호화 로직을 통한 데이터를 map에 넣기
         map.put("userPass", "");
+
         UserDto findUser = userService.selectUser(map);
         if (findUser == null) {
             //카카오로부터 받아온 이메일로 조회된 회원이 없으면 회원가입
             UserDto userDto = new UserDto();
             userDto.setUserId(userInfo.getKakao_account().getEmail());
+            //암호화로직처리
+            //암호화 로직을 통한 데이터를 dto에 넣기
             userDto.setUserPass("1111");
             userDto.setUserName(userInfo.getKakao_account().getProfile().getNickname());
             userDto.setGender("남자");
+            userDto.setProfileImg(userInfo.getProperties().getProfile_image());
             int result = userService.insertUser(userDto);
             if(result == 1 )
-                setToken(session, response, userDto);
+                //토큰쓸지 세션쓸지
+                setToken(response, userDto);
         } else {
-            setToken(session, response, findUser);
+            //사진 업데이트 할꺼면 처리
+            //토큰쓸지 세션쓸지
+            setToken(response, findUser);
         }
 
         return "redirect:/";
     }
 
-    private void setToken(HttpSession session, HttpServletResponse  response, UserDto userDto) {
+
+
+    //토큰방식은 세션방식과 달리 로그인관련 인증처리를 클라이언트가 가지고 있음
+    //세션 방식은 서버가 가지고 있음
+    private void setToken(HttpServletResponse  response, UserDto userDto) {
         String accessToken = jwtToken.makeJwtToken(userDto.getUserId(), 0);
         String refreshToken = jwtToken.makeJwtToken(userDto.getUserId(), 1);
         setCookie(response, userDto.getUserName(),"user_name", 10*6*10 , false);//유저이름
@@ -117,7 +130,7 @@ public class SocialController {
         String reqUrl = "/oauth/token";
         URI tokenUrl = URI.create(kakoAuthUrl + reqUrl);
 
-        // 3. 헤더 객체 생성 하여 Content-type 설정하기
+        // 3. 헤더 객체 생성 하여 Content-type 설정하기(카카오 API 요청문서를 보면 이걸 넣고 해야된다고 설명되어 있어!)
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 

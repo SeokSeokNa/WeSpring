@@ -24,6 +24,7 @@
     <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/board/**"/>
+            <mvc:mapping path="/user/getToken"/>
             <mvc:exclude-mapping path="/board/list"/>
             <mvc:exclude-mapping path="/board/read"/>
             <ref bean="jwtInterceptor"/>

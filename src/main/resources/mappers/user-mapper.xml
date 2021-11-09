@@ -26,12 +26,14 @@
             user_id,
             user_pass,
             user_name,
-            gender
+            gender,
+            profile_img
         ) values (
                      #{userId},
                      #{userPass},
                      #{userName},
-                     #{gender}
+                     #{gender},
+                     #{profileImg}
                  )
 
     </insert>
