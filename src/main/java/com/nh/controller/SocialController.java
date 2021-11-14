@@ -38,6 +38,13 @@ public class SocialController {
     private static final String kakaoApiKey = "7429442a828660d100f86f3f8608d5a1";
     private static final String redirectURI = "http://localhost:8080/oauth/result";
     private static final String scope = "profile_nickname , profile_image ,account_email";
+    private static final String loginUrl = kakoAuthUrl + "/oauth/authorize?client_id=" + kakaoApiKey + "&redirect_uri=" + redirectURI + "&response_type=code" +"&scope="+scope;
+
+
+    @GetMapping("/loginPage")
+    public String showLoginPage() {
+        return "redirect:"+loginUrl;
+    } //showLoginPage
 
     //로그인 페이지 열기
     @GetMapping(value = "/login/getKakaoAuthUrl")
