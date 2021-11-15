@@ -100,6 +100,8 @@ public class SocialController {
     //토큰방식은 세션방식과 달리 로그인관련 인증처리를 클라이언트가 가지고 있음
     //세션 방식은 서버가 가지고 있음
     private void setToken(HttpServletResponse  response, UserDto userDto) {
+        //https://great-developer.tistory.com/59
+        //헤더 방식 쓸거면 이거 참고하여 redirect 바로 하지말고 forward 를 써야할듯
         String accessToken = jwtToken.makeJwtToken(userDto.getUserId(), 0);
         String refreshToken = jwtToken.makeJwtToken(userDto.getUserId(), 1);
         setCookie(response, userDto.getUserName(),"user_name", 10*6*10 , false);//유저이름
