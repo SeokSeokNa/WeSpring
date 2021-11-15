@@ -20,7 +20,7 @@
         <form action="/signup/new" method="post" id="sign_up_form">
             <h1>Create Account</h1>
             <div class="social-container">
-                <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+                <a href="/loginPage" class="social"><img src="/resources/image/kakao_icon.png" width="100"/></a>
                 <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
                 <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
             </div>

@@ -13,10 +13,6 @@
 </head>
 <body>
 <button onclick="loginWithKakao();">카카오 로그인</button>
-<%--<a href="https://kauth.kakao.com/oauth/authorize--%>
-<%--            ?client_id=9d964721616f86a4ed62c0097d88aa88--%>
-<%--            &redirect_uri=http://localhost:8080/oauth--%>
-<%--            &response_type=code">카카오 로그인</a>--%>
 <script type="text/javascript">
     function loginWithKakao() {
         $.ajax({
