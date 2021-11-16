@@ -1,8 +1,11 @@
 package com.nh.controller;
 
+import com.nh.aws.AwsFile;
 import com.nh.dto.GalleryDto;
 import com.nh.dto.PhotoDto;
 import com.nh.service.GalleryService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,13 +21,15 @@ import java.util.List;
 import java.util.UUID;
 
 @Controller
+@RequiredArgsConstructor
+@Slf4j
 public class GalleryController {
 
-    @Autowired
-    String uploadPath;
+    private final AwsFile awsFile;
 
-    @Autowired
-    GalleryService galleryService;
+    private final String uploadPath;
+
+    private final GalleryService galleryService;
 
     @GetMapping("/gallery/list")
     public String galleryList(@RequestParam(name = "currentPage", defaultValue = "0") int currentPage, Model model) {
@@ -58,35 +63,53 @@ public class GalleryController {
 
     @PostMapping("/gallery/new")
     public String galleryInsert(GalleryDto galleryDto , MultipartFile[] files) throws IOException {
-        //파일이 저장될 디렉터리 경로 가 있는지 없는지
-        if (!new File(uploadPath).exists()) {
-            new File(uploadPath).mkdirs();
-        }
+        //AWS S3 사용 전 코드
 
+        //파일이 저장될 디렉터리 경로 가 있는지 없는지
+//        if (!new File(uploadPath).exists()) {
+//            new File(uploadPath).mkdirs();
+//        }
+
+//        for (MultipartFile file : files) {
+//            PhotoDto photoDto = new PhotoDto();
+//            UUID uuid = UUID.randomUUID();//랜덤 값
+//            String newName = uuid+"_"+file.getOriginalFilename();
+//            photoDto.setOrgName(file.getOriginalFilename());
+//            photoDto.setNewName(newName);
+//            photoDto.setLocation(uploadPath+newName);
+//            galleryDto.getPhotoDtoList().add(photoDto);
+//            File target = new File(uploadPath, newName);//생성될 파일의 경로 , 파일이름
+//            file.transferTo(target);//파일생성
+//        }
+
+        //AWS S3 사용 후 코드
         for (MultipartFile file : files) {
+            UUID uuid = UUID.randomUUID();
+            String imageUrl = awsFile.upload(file, "image" , uuid);
+            log.debug("imageUrl = {} " , imageUrl);
             PhotoDto photoDto = new PhotoDto();
-            UUID uuid = UUID.randomUUID();//랜덤 값
-            String newName = uuid+"_"+file.getOriginalFilename();
             photoDto.setOrgName(file.getOriginalFilename());
-            photoDto.setNewName(newName);
-            photoDto.setLocation(uploadPath+newName);
+            photoDto.setNewName(uuid + "_" +file.getName());
+            photoDto.setLocation(imageUrl);
             galleryDto.getPhotoDtoList().add(photoDto);
-            File target = new File(uploadPath, newName);//생성될 파일의 경로 , 파일이름
-            file.transferTo(target);//파일생성
         }
 
         galleryService.galleryInsert(galleryDto);
+
         return "redirect:/gallery/list";
     }
 
     @PostMapping("/gallery/delete")
     @ResponseBody
-    public String galleryDelete(@RequestParam("valueArr")int[] valueArr) {
+    public String galleryDelete(@RequestParam("valueArr")int[] valueArr , @RequestParam("nameArr")String[] nameArr) {
         System.out.println("파라미터 길이  = "+valueArr.length);
         int returnVal = 0;
         int size = valueArr.length;
         for (int i = 0; i < size; i++){
             returnVal = galleryService.galleryDelete(valueArr[i]);
+        }
+        if (returnVal == 1) {
+            awsFile.deleteFiles(nameArr);
         }
         return Integer.toString(returnVal);
     }

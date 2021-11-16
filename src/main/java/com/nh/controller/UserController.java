@@ -20,8 +20,8 @@ import java.util.List;
 public class UserController {
 
 
-    private UserService userService;
-    private JwtToken jwtToken;
+    private final UserService userService;
+    private final JwtToken jwtToken;
 
     @GetMapping("/signup/new")
     public String getSignup() {
@@ -79,7 +79,7 @@ public class UserController {
         map.put("userId", userId);
         map.put("userPass", userPass);
         UserDto result = userService.selectUser(map);
-
+        System.out.println(result.getUserId());
         if (result != null) {
             session.setAttribute("user_info", result);
             return "ok";

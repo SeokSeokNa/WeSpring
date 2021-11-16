@@ -40,14 +40,14 @@
                         <c:choose>
                             <%--해당글의 첫번째 사진이라면--%>
                             <c:when test="${i==0}">
-                                <a href="/images/${gallery.photoDtoList.get(i).newName}?image=250" data-toggle="lightbox" data-title="${gallery.title}"  data-footer="my photo.."   data-gallery="gallery${gallery.galleryNo}" name="checkRow">
-                                    <img src="/images/${gallery.photoDtoList.get(i).newName}?image=250" alt="" class="img-fluid" >
+                                <a href="${gallery.photoDtoList.get(i).location}?image=250" data-toggle="lightbox" data-title="${gallery.title}"  data-footer="my photo.."   data-gallery="gallery${gallery.galleryNo}" name="checkRow">
+                                    <img src="${gallery.photoDtoList.get(i).location}?image=250" alt="" class="img-fluid" data-name = "${gallery.photoDtoList.get(i).newName}">
                                 </a>
                             </c:when>
                             <%--해당글의 첫번째 사진이 아니라면--%>
                             <c:otherwise>
-                                <a href="/images/${gallery.photoDtoList.get(i).newName}?image=250" data-toggle="lightbox" data-title="${gallery.title}" data-footer="my photo.."   data-gallery="gallery${gallery.galleryNo}" style="display: none">
-                                    <img src="/images/${gallery.photoDtoList.get(i).newName}?image=250" alt="" class="img-fluid">
+                                <a href="${gallery.photoDtoList.get(i).location}?image=250" data-toggle="lightbox" data-title="${gallery.title}" data-footer="my photo.."   data-gallery="gallery${gallery.galleryNo}" style="display: none">
+                                    <img src="${gallery.photoDtoList.get(i).location}?image=250" alt="" class="img-fluid" data-name = "${gallery.photoDtoList.get(i).newName}">
                                 </a>
                             </c:otherwise>
                         </c:choose>
@@ -139,6 +139,13 @@
         var url = "/gallery/delete";
         var valueArr = new Array();
         var list = $("input[name='chk']");
+        var img = $("input[name='chk']").parent().children().children("img");
+        //사진 이름담기...
+        for (var i = 0; i < img.length; i++) {
+            let data = $(img[i]).data("name");
+            console.log(data);
+        }
+        var img_data = $("input[name='chk']").parent().children().children(".img-fluid").data("name")
         for (var i = 0; i < list.length; i++) {
             if (list[i].checked) {
                 valueArr.push(list[i].value);
@@ -150,22 +157,25 @@
             alert("선택된 게시물이 없습니다");
         }else {
             var deleteChk = confirm("정말 삭제하시겠습니까?");
-            $.ajax({
-                url: url,
-                type: 'POST',
-                traditional: true, /*자바 controller에게 배열 파라미터를 넘겨줄경우 꼭 필 수!*/
-                data: {
-                    "valueArr": valueArr
-                },
-                success: function (data) {
-                    if (data = 1) {
-                        alert("삭제성공");
-                        location.replace("/gallery/list")
-                    } else {
-                        alert("삭제 실패");
+            if (deleteChk) {
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    traditional: true, /*자바 controller에게 배열 파라미터를 넘겨줄경우 꼭 필 수!*/
+                    data: {
+                        "valueArr": valueArr
+                    },
+                    success: function (data) {
+                        if (data = 1) {
+                            alert("삭제성공");
+                            location.replace("/gallery/list")
+                        } else {
+                            alert("삭제 실패");
+                        }
                     }
-                }
-            })
+                });
+            }
+
         }
     }
 

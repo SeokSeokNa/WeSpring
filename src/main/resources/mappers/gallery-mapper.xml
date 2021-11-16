@@ -45,7 +45,7 @@
                 limit #{offset}, #{limit};
     </select>
     <select id="getPhotoList" resultType="photoDto">
-        SELECT photo_no as photoNo,new_name as newName FROM photo WHERE gallery_no = #{galleryNo}
+        SELECT photo_no as photoNo,new_name as newName , location  FROM photo WHERE gallery_no = #{galleryNo}
     </select>
 
     <delete id="galleryDelete" parameterType="java.lang.Integer" >
