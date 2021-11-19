@@ -45,7 +45,8 @@
         <form action="/signin/new" method="post" id="sign_in_form">
             <h1>Sign in</h1>
             <div class="social-container">
-                <a href="/loginPage" class="social"><img src="/resources/image/kakao_icon.png" width="50"/></a>
+                <a href="/loginPage/kakao" class="social"><img src="/resources/image/kakao_icon.png" width="50"/></a>
+                <a href="/loginPage/naver" class="social"><img src="/resources/image/naver_icon.png" width="50"/></a>
             </div>
             <span>or use your account</span>
             <input type="text" placeholder="아이디를 입력하세요" id="user_id2" name = "userId"/>

@@ -8,6 +8,7 @@ import com.nh.dto.kakao.KakaoUserDto;
 import com.nh.jwt.JwtToken;
 import com.nh.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -34,15 +35,18 @@ public class SocialController {
     @Autowired
     private JwtToken jwtToken;
 
-    private static final String kakoAuthUrl = "https://kauth.kakao.com";
-    private static final String kakaoApiKey = "7429442a828660d100f86f3f8608d5a1";
+    @Value("#{social['kakao.key']}") /*servlet-context.xml 파일에 util 옵션으로 properties 파일을 지정해야 읽기가능*/
+    private String apiKey;
+
+    private static final String authUrl = "https://kauth.kakao.com";
     private static final String redirectURI = "http://localhost:8080/oauth/result";
     private static final String scope = "profile_nickname , profile_image ,account_email";
-    private static final String loginUrl = kakoAuthUrl + "/oauth/authorize?client_id=" + kakaoApiKey + "&redirect_uri=" + redirectURI + "&response_type=code" +"&scope="+scope;
 
 
-    @GetMapping("/loginPage")
+
+    @GetMapping("/loginPage/kakao")
     public String showLoginPage() {
+        String loginUrl = authUrl + "/oauth/authorize?client_id=" + apiKey + "&redirect_uri=" + redirectURI + "&response_type=code" +"&scope="+scope;
         return "redirect:"+loginUrl;
     } //showLoginPage
 
@@ -50,7 +54,7 @@ public class SocialController {
     @GetMapping(value = "/login/getKakaoAuthUrl")
     @ResponseBody
     public String kakaoLoginPage() {
-        String reqUrl = kakoAuthUrl + "/oauth/authorize?client_id=" + kakaoApiKey + "&redirect_uri=" + redirectURI + "&response_type=code" +"&scope="+scope;
+        String reqUrl = authUrl + "/oauth/authorize?client_id=" + apiKey + "&redirect_uri=" + redirectURI + "&response_type=code" +"&scope="+scope;
 
         return reqUrl;
     }
@@ -137,7 +141,7 @@ public class SocialController {
 
         // 2. 토큰 요청 url 만들기   ,https://kauth.kakao.com/oauth/token
         String reqUrl = "/oauth/token";
-        URI tokenUrl = URI.create(kakoAuthUrl + reqUrl);
+        URI tokenUrl = URI.create(authUrl + reqUrl);
 
         // 3. 헤더 객체 생성 하여 Content-type 설정하기(카카오 API 요청문서를 보면 이걸 넣고 해야된다고 설명되어 있어!)
         HttpHeaders headers = new HttpHeaders();
@@ -147,7 +151,7 @@ public class SocialController {
         // 4. httpBody부분 생성 및 셋팅하기(보통 Map 형태이다)
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type","authorization_code");
-        params.add("client_id",kakaoApiKey);
+        params.add("client_id", apiKey);
         params.add("redirect_uri",redirectURI);
         params.add("code", code);
 

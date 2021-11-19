@@ -7,7 +7,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class NaverUserDto {
+public class KakaoUserDto {
 
     private int id;
     private String connected_at;
