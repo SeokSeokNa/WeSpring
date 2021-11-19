@@ -7,7 +7,7 @@ import lombok.ToString;
 
 @Getter
 @Setter
-public class KakaoTokenDto {
+public class NaverTokenDto {
     String token_type;
     String access_token;
     Integer expires_in;

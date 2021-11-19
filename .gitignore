@@ -3,4 +3,5 @@ out/
 /target
 *.iml
 /src/main/resources/AwsCredentials.properties
+/src/main/resources/socialLogin.properties
 
